@@ -6,6 +6,7 @@ buildscript {
     dependencies {
         // Plugin robusto para Ladybug/Panda (Android Studio 2024/2025)
         classpath 'com.android.tools.build:gradle:8.5.0'
+        classpath 'com.google.gms:google-services:4.4.0'
     }
 }
 

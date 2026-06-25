@@ -27,14 +27,4 @@ public class SensorData {
     public float getVx() { return vx; }
     public float getVy() { return vy; }
     public long getTimestamp() { return timestamp; }
-
-    /**
-     * Calcula a distância euclidiana entre este ponto e outro.
-     */
-    /** Calcula a distância desta leitura até um ponto informado. */
-    public double distancia(float px, float py) {
-        float dx = x - px;
-        float dy = y - py;
-        return Math.sqrt(dx * dx + dy * dy);
-    }
 }

@@ -1,0 +1,46 @@
+rules_version = '2';
+
+// Regras de segurança do Cloud Firestore - Projeto AutoTarget (AV3)
+//
+// Atende ao requisito 6.3.2 e): "Garantir que um usuário não possa acessar
+// dados de outro (regras de segurança no Firestore)".
+//
+// Estas regras são as mesmas publicadas em produção no Firebase Console
+// (Firestore Database > Regras). Mantidas aqui em arquivo, versionadas junto
+// com o código-fonte, para que o isolamento por usuário possa ser auditado
+// e reproduzido sem depender de acesso ao Console do projeto.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Coleção "partidas": histórico de partidas salvo ao final de cada jogo.
+    match /partidas/{partidaId} {
+
+      // Leitura liberada para qualquer usuário autenticado.
+      // Necessário porque a tela de Ranking precisa exibir as melhores
+      // pontuações de TODOS os jogadores, não apenas as do usuário logado.
+      allow read: if request.auth != null;
+
+      // Escrita (criação) só é permitida se o campo "userId" do documento
+      // sendo criado for exatamente o UID do usuário autenticado fazendo a
+      // requisição. Isso impede que um usuário crie/forje uma partida em
+      // nome de outro jogador.
+      allow create: if request.auth != null
+                    && request.resource.data.userId == request.auth.uid;
+
+      // Nenhuma partida pode ser alterada ou apagada depois de criada,
+      // nem mesmo pelo próprio dono. Evita manipulação de pontuação
+      // (própria ou de terceiros) após o registro no ranking.
+      allow update, delete: if false;
+    }
+
+    // Coleção "telemetria": leituras do sensor de temperatura (sistema ciberfísico).
+    match /telemetria/{telemetriaId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+      allow update, delete: if false;
+    }
+
+    // Qualquer outra coleção não prevista explicitamente acima fica bloqueada
+    // por padrão (negação implícita do Firestore quando nenhuma regra casa).
+  }
+}

@@ -667,45 +667,7 @@ public class CannonManager {
     }
 
     /** Encapsula a criação do canhão e evita que exceções interrompam o ciclo de otimização. */
-    /** Cria um novo canhão em posição segura quando há ganho esperado suficiente. */
     private void adicionarCanhao(float x, float y) {
         try { jogo.adicionarCanhao(x, y); } catch (Exception ignored) {}
-    }
-
-    /**
-     * Estima ganho de forma simplificada quando não há dados reconciliados disponíveis.
-     * Este método é mantido como apoio para cenários de fallback geométrico.
-     */
-    /** Aproxima o benefício de adicionar defesa com base na relação entre alvos e canhões. */
-    private double calcularGanhoEsperadoSimples(int numCanhoes, int numAlvos) {
-        double fatorDiminuicao = 1.0 / (1.0 + numCanhoes * 0.2);
-        double probAcerto = Math.min(0.9, 0.4 + (numAlvos * 0.08));
-        return TAXA_DISPARO_BASE * probAcerto * fatorDiminuicao;
-    }
-
-    /** Escolhe uma posição inicial para novo canhão usando a concentração atual de alvos. */
-    private float[] calcularPosicaoOtimaSimples(List<Canhao> canhoes, List<Alvo> alvos) {
-        float meio = jogo.getLargura() / 2f;
-        float cx = 0, cy = 0;
-        int cont = 0;
-        for (Alvo a : alvos) {
-            if (!a.isAtivo()) continue;
-            boolean coberto = false;
-            for (Canhao c : canhoes) {
-                double dx = c.getX() - a.getX(), dy = c.getY() - a.getY();
-                if (Math.sqrt(dx * dx + dy * dy) < LIMIAR_COBERTURA) { coberto = true; break; }
-            }
-            if (!coberto) { cx += a.getX(); cy += a.getY(); cont++; }
-        }
-        if (cont == 0) {
-            for (Alvo a : alvos) { if (a.isAtivo()) { cx += a.getX(); cy += a.getY(); cont++; } }
-        }
-        if (cont > 0) { cx /= cont; cy /= cont; }
-        else { cx = isEsquerda ? meio * 0.5f : meio * 1.5f; cy = jogo.getAltura() * 0.5f; }
-
-        if (isEsquerda) cx = Math.max(MARGEM_SEGURANCA, Math.min(cx, meio - MARGEM_SEGURANCA));
-        else             cx = Math.max(meio + MARGEM_SEGURANCA, Math.min(cx, jogo.getLargura() - MARGEM_SEGURANCA));
-        cy = Math.max(MARGEM_SEGURANCA, Math.min(cy, jogo.getAltura() - MARGEM_SEGURANCA));
-        return ajustarPosicaoContraSobreposicao(cx, cy, new ArrayList<>(), canhoes, null);
     }
 }

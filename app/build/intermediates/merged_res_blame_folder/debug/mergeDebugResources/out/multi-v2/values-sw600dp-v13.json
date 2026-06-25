@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.autotarget.game.app-mergeDebugResources-29:/values-sw600dp-v13/values-sw600dp-v13.xml",
+            "outputFile": "com.autotarget.game.app-mergeDebugResources-34:/values-sw600dp-v13/values-sw600dp-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\palva\\.gradle\\caches\\transforms-4\\a6263f23dc36411c1406d9ffd3b371e3\\transformed\\appcompat-1.6.1\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "source": "C:\\Users\\palva\\.gradle\\caches\\transforms-4\\8157052f07d7d5be66cdae3c3da54105\\transformed\\appcompat-1.6.1\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\palva\\.gradle\\caches\\transforms-4\\fbe0315f2ea84d5f190ed2e77da0b939\\transformed\\material-1.11.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
+                    "source": "C:\\Users\\palva\\.gradle\\caches\\transforms-4\\c83c605c8fd3a7522bf1d558a663064c\\transformed\\material-1.11.0\\res\\values-sw600dp-v13\\values-sw600dp-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,10,11,12,13,14",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4",

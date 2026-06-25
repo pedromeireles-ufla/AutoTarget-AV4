@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Centraliza evidências quantitativas da AV2.
+ * Centraliza evidências quantitativas do projeto AutoTarget.
  *
  * A classe mantém logs resumidos em memória e também consegue gerar um relatório TXT
- * dentro da pasta externa privada do app. O objetivo é documentar, de forma clara,
- * os pontos cobrados pela rubrica: sensores, reconciliação antes/depois, impacto da
- * energia/penalidade e evidências dos arquivos de escalonabilidade.
+ * dentro da pasta externa privada do app. Nasceu para documentar os pontos cobrados
+ * pela rubrica da AV2 (sensores, reconciliação antes/depois, impacto da energia/penalidade
+ * e evidências dos arquivos de escalonabilidade), e seu método genérico registrarEvento
+ * também é reaproveitado por funcionalidades da AV3 (Firebase, criptografia, telemetria),
+ * que usam esta mesma infraestrutura de log em vez de duplicá-la.
  */
 public final class EvidenceLogger {
     private static final String TAG = "AV2_EVIDENCIAS";

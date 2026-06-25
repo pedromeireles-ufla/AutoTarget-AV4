@@ -91,7 +91,7 @@ public abstract class Alvo extends Thread {
     }
 
     /**
-     * Simula ruído nas coordenadas e velocidades, aproximando uma leitura de sensor real
+     * Simula ruído nas coordenadas e velocidades, aproximando uma leitura de sensor real.
      */
     private void coletarLeituraSensor() {
         float ruidoX  = (float) (random.nextGaussian() * Math.abs(x  * 0.05));
@@ -151,7 +151,6 @@ public abstract class Alvo extends Thread {
         }
     }
 
-    /** Encerra a atividade do alvo e interrompe sua thread de movimento. */
     /** Finaliza a participação do alvo no jogo e encerra seu loop de execução. */
     public void desativar() {
         this.ativo = false;
@@ -165,10 +164,4 @@ public abstract class Alvo extends Thread {
     public float getVx()        { return vx; }
     public float getVy()        { return vy; }
     public boolean isAtivo()    { return ativo; }
-    public SensorBuffer getSensorBuffer() { return sensorBuffer; }
-
-    /** Indica em qual metade da tela o alvo está, informação usada para distribuição entre lados. */
-    public boolean isLadoEsquerdo() {
-        return x < larguraTela / 2f;
-    }
 }

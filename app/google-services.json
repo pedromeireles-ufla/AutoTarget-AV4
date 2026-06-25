@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "16537537344",
+    "project_id": "autotarget-a9d80",
+    "storage_bucket": "autotarget-a9d80.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:16537537344:android:a8cbeb76bb9d4d2f0188a5",
+        "android_client_info": {
+          "package_name": "com.autotarget.game"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCWa-Fb7NrVZph4YgZ2IbhE5iPVHlwraA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

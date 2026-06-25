@@ -1,0 +1,4 @@
+com.autotarget.game.test.app-androidTest-0 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV3\app\build\generated\res\resValues\androidTest\debug
+com.autotarget.game.test.app-mergeDebugAndroidTestResources-1 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV3\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.autotarget.game.test.app-mergeDebugAndroidTestResources-2 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV3\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.autotarget.game.test.app-debugAndroidTest-3 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV3\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources

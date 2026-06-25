@@ -17,7 +17,6 @@ public final class Process {
 
     private Process() {}
 
-    /** Tenta fixar a thread atual nos núcleos indicados pela máscara de CPU. */
     /** Tenta fixar a thread atual em um conjunto de núcleos e retorna se a operação funcionou. */
     public static boolean setThreadAffinityMask(int mask) {
         if (tryAndroidHiddenApi(mask)) {
@@ -32,7 +31,6 @@ public final class Process {
         return tasksetOk;
     }
 
-    /** Tenta usar chamada nativa oculta do Android para aplicar afinidade. */
     /** Primeiro tenta usar APIs internas do Android para aplicar afinidade de CPU. */
     private static boolean tryAndroidHiddenApi(int mask) {
         try {
@@ -46,7 +44,6 @@ public final class Process {
         }
     }
 
-    /** Usa o comando `taskset` com timeout como fallback de afinidade. */
     /** Como alternativa, tenta executar o comando taskset com timeout curto. */
     private static boolean tryTasksetWithTimeout(int mask) {
         java.lang.Process proc = null;

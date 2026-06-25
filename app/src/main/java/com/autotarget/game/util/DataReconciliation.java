@@ -9,16 +9,16 @@ import org.apache.commons.math3.linear.*;
 public class DataReconciliation {
 
     /**
-     * Executa a reconciliação de dados conforme a fórmula matricial exata.
-     */
-    /**
-     * Aplica uma reconciliação simplificada para suavizar leituras ruidosas antes da decisão.
+     * Executa a reconciliação de dados por Mínimos Quadrados ponderados (fórmula matricial exata):
+     * ŷ = y - V·Aᵀ·(A·V·Aᵀ)⁻¹·A·y
+     *
+     * @param y medições brutas (ex.: distâncias calculadas a partir dos sensores)
+     * @param V matriz de variâncias/covariâncias das medições
+     * @param A matriz de restrições (relaciona medições e variáveis do sistema)
+     * @return valores ajustados (y reconciliado), ou o próprio y original se a matriz for singular
      */
     public static double[] reconcile(double[] y, double[][] V, double[][] A) {
         try {
-            int m = A.length;       // Número de restrições (canhões)
-            int n = A[0].length;    // Número de medições (distâncias)
-
             RealVector yVec = new ArrayRealVector(y);
             RealMatrix vMat = new Array2DRowRealMatrix(V);
             RealMatrix aMat = new Array2DRowRealMatrix(A);

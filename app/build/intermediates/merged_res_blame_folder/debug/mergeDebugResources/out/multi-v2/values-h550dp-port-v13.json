@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.autotarget.game.app-mergeDebugResources-29:/values-h550dp-port-v13/values-h550dp-port-v13.xml",
+            "outputFile": "com.autotarget.game.app-mergeDebugResources-34:/values-h550dp-port-v13/values-h550dp-port-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\palva\\.gradle\\caches\\transforms-4\\fbe0315f2ea84d5f190ed2e77da0b939\\transformed\\material-1.11.0\\res\\values-h550dp-port-v13\\values-h550dp-port-v13.xml",
+                    "source": "C:\\Users\\palva\\.gradle\\caches\\transforms-4\\c83c605c8fd3a7522bf1d558a663064c\\transformed\\material-1.11.0\\res\\values-h550dp-port-v13\\values-h550dp-port-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

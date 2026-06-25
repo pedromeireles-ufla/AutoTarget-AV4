@@ -4,6 +4,7 @@ import com.autotarget.game.exception.JogoException;
 import com.autotarget.game.util.EvidenceLogger;
 import java.util.ArrayList;
 import java.util.List;
+import com.autotarget.game.util.FirebaseRepository;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -23,8 +24,8 @@ public class Jogo {
     private final List<Canhao> canhoesDireita = new CopyOnWriteArrayList<>();
     private final List<Projetil> projeteis = new CopyOnWriteArrayList<>();
 
-    // Pool de threads: spawn, cronometro, energia, otimizacao, reconciliacao, movimento de canhoes + margem
-    // Pool central para executar threads de alvos, canhões e rotinas periódicas do jogo.
+    // Pool central para executar threads de alvos, canhões e rotinas periódicas do jogo
+    // (spawn, cronômetro, energia, otimização, reconciliação, movimento de canhões, telemetria + margem).
     private final ExecutorService gameExecutor = Executors.newFixedThreadPool(12);
     
     // Semáforos protegem trechos críticos quando listas compartilhadas são percorridas ou alteradas.
@@ -53,6 +54,16 @@ public class Jogo {
     private int tempoRestante = 60;
     private final Random random = new Random();
 
+    // Sistema Ciberfísico (AV3)
+    private float temperaturaAtual = 30.0f;
+    private float limiarTemperatura = 40.0f;
+    private volatile float fatorFeedback = 1.0f;
+    private FirebaseRepository firebaseRepository = FirebaseRepository.getInstance();
+
+    // Histórico de temperatura da partida atual, usado para montar o gráfico de telemetria
+    // exibido ao final do jogo (Critério adicional: análise/discussão de estabilidade e limiar).
+    private final List<Float> historicoTemperatura = new CopyOnWriteArrayList<>();
+
     /**
      * Contrato usado pela tela para receber atualizações de tempo, placar, energia e fim de partida.
      */
@@ -60,7 +71,9 @@ public class Jogo {
         void onTempoAtualizado(int tempo);
         void onPlacarAtualizado(int esq, int dir);
         void onEnergiaAtualizada(float esq, float dir);
-        void onJogoFinalizado(String vencedor, int abatesEsq, int abatesDir);
+        void onJogoFinalizado(String vencedor, int abatesEsq, int abatesDir, int totalCanhoes);
+        /** Notifica a tela a cada nova leitura de temperatura, para atualizar o gráfico em tempo real. */
+        void onTelemetriaAtualizada(float temperatura, float limiar, float fatorFeedback);
     }
 
     private JogoCallback callback;
@@ -74,7 +87,6 @@ public class Jogo {
         this.optimizationDireita = new OptimizationTask(this, false);
     }
 
-    /** Inicia a partida, cria entidades iniciais e agenda tarefas periódicas. */
     /** Inicia uma nova partida, cria defesas iniciais e aciona as rotinas periódicas. */
     public void iniciar() {
         this.emAndamento = true;
@@ -84,6 +96,7 @@ public class Jogo {
         this.energiaEsquerda = 100f;
         this.energiaDireita = 100f;
         this.tempoRestante = 60;
+        historicoTemperatura.clear();
 
         EvidenceLogger.reiniciar();
         EvidenceLogger.registrarEvento("RELATÓRIO", "Dimensões da arena: largura=" + largura + " altura=" + altura);
@@ -95,6 +108,7 @@ public class Jogo {
         iniciarThreadEnergia();
         iniciarThreadReconciliacao();
         iniciarThreadMovimentoCanhoes();
+        iniciarThreadTelemetria();
 
         // Iniciar com 1 canhão de cada lado para cobertura inicial
         try {
@@ -299,8 +313,6 @@ public class Jogo {
     public boolean isEmAndamento() { return emAndamento; }
     public int getLargura() { return largura; }
     public int getAltura() { return altura; }
-    public List<Alvo> getAlvosEsquerda() { return alvosEsquerda; }
-    public List<Alvo> getAlvosDireita() { return alvosDireita; }
     public List<Canhao> getCanhoesEsquerda() { return canhoesEsquerda; }
     public List<Canhao> getCanhoesDireita() { return canhoesDireita; }
     public List<Projetil> getProjeteis() { return projeteis; }
@@ -321,10 +333,66 @@ public class Jogo {
         return (n - LIMITE_PENALIDADE) * 20;
     }
 
+    /**
+     * Implementa a telemetria e o controle por feedback (Requisito 6.3.2 d).
+     * Registra a temperatura a cada 10 segundos e ajusta a taxa de disparo.
+     * Também mantém um histórico em memória e notifica a tela, para permitir
+     * a montagem de um gráfico de temperatura x tempo (Critério adicional).
+     */
+    private void iniciarThreadTelemetria() {
+        gameExecutor.execute(() -> {
+            while (emAndamento) {
+                try {
+                    // Simulação de sensor de temperatura (valor aleatório entre 30 e 45 graus)
+                    temperaturaAtual = 30.0f + random.nextFloat() * 15.0f;
+                    
+                    String estado = temperaturaAtual > limiarTemperatura ? "SUPERAQUECIDO" : "NORMAL";
+                    
+                    // Controle por Feedback: Reduz a taxa de disparo se superaquecer
+                    if (temperaturaAtual > limiarTemperatura) {
+                        // Aumenta o intervalo de disparo (fator > 1.0)
+                        fatorFeedback = 1.5f + (temperaturaAtual - limiarTemperatura) * 0.1f;
+                    } else {
+                        fatorFeedback = 1.0f;
+                    }
+
+                    // Mantém o histórico da partida atual para o gráfico exibido ao final.
+                    historicoTemperatura.add(temperaturaAtual);
+
+                    // Registro no Firebase
+                    firebaseRepository.registrarTelemetria(new Telemetria(temperaturaAtual, estado));
+                    
+                    EvidenceLogger.registrarEvento("TELEMETRIA", 
+                        String.format("Temp: %.1f°C | Estado: %s | Fator Feedback: %.2f", 
+                        temperaturaAtual, estado, fatorFeedback));
+
+                    if (callback != null) {
+                        callback.onTelemetriaAtualizada(temperaturaAtual, limiarTemperatura, fatorFeedback);
+                    }
+
+                    Thread.sleep(10000); // A cada 10 segundos
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        });
+    }
+
+    /** Retorna uma cópia do histórico de temperatura coletado durante a partida atual. */
+    public List<Float> getHistoricoTemperatura() {
+        return new ArrayList<>(historicoTemperatura);
+    }
+
+    public float getLimiarTemperatura() {
+        return limiarTemperatura;
+    }
+
+    public float getFatorFeedback() {
+        return fatorFeedback;
+    }
+
     public OptimizationTask getOptimizationEsquerda() { return optimizationEsquerda; }
     public OptimizationTask getOptimizationDireita() { return optimizationDireita; }
-    public int getAbatesEsquerda() { return abatesEsquerda; }
-    public int getAbatesDireita() { return abatesDireita; }
 
     /** Gera novos alvos periodicamente enquanto a partida estiver em andamento. */
     private void iniciarThreadSpawn() {
@@ -380,16 +448,18 @@ public class Jogo {
         });
     }
 
-    /** Finaliza a partida, calcula o vencedor e informa a interface. */
     /** Encerra a partida, interrompe entidades e informa o vencedor para a interface. */
     public void finalizarJogo() {
         if (!emAndamento) return;
         this.emAndamento = false;
-        
+
         String vencedor;
         if (abatesEsquerda > abatesDireita) vencedor = "VENCEDOR: SISTEMA A";
         else if (abatesDireita > abatesEsquerda) vencedor = "VENCEDOR: SISTEMA B";
         else vencedor = "EMPATE!";
+
+        // Captura a contagem ANTES de limpar as listas
+        int totalCanhoes = canhoesEsquerda.size() + canhoesDireita.size();
 
         EvidenceLogger.registrarEvento(
                 "PLACAR",
@@ -398,7 +468,7 @@ public class Jogo {
 
         gameExecutor.execute(() -> {
             limparTudo();
-            if (callback != null) callback.onJogoFinalizado(vencedor, abatesEsquerda, abatesDireita);
+            if (callback != null) callback.onJogoFinalizado(vencedor, abatesEsquerda, abatesDireita, totalCanhoes);
         });
     }
 }

@@ -718,21 +718,6 @@ public final class SchedulingAnalysis {
         if (sink == -1.0) Log.d(TAG, "valor impossível");
     }
 
-    /** Aguarda até o próximo instante planejado da medição experimental. */
-    /** Aguarda até o instante planejado para reduzir variações entre amostras consecutivas. */
-    private static void dormirAte(long deadlineNano) {
-        while (true) {
-            long restante = deadlineNano - System.nanoTime();
-            if (restante <= 0) return;
-            try {
-                Thread.sleep(Math.max(1, restante / 1_000_000L));
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                return;
-            }
-        }
-    }
-
     /** Constrói a máscara binária de afinidade para representar os núcleos selecionados. */
     private static int criarMascara(int qtdCores, int coresDisponiveis) {
         int coresUsados = Math.max(1, Math.min(qtdCores, coresDisponiveis));

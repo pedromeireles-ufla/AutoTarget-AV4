@@ -131,5 +131,4 @@ public class Projetil extends Thread {
     public float getY() { return y; }
     public float getRaio() { return raio; }
     public boolean isAtivo() { return ativo; }
-    public boolean isLadoEsquerdo() { return isEsquerda; }
 }

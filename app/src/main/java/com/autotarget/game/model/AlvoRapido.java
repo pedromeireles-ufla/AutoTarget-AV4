@@ -8,8 +8,7 @@ public class AlvoRapido extends Alvo {
     // Ângulo interno usado para criar uma oscilação vertical durante o deslocamento horizontal.
     private float anguloOscilacao = 0;
 
-    // Construtor: Inicializa o alvo rápido com raio 20 e velocidade alta
-    /** Cria um alvo menor e mais rápido, aumentando a dificuldade de rastreamento. */
+    /** Cria um alvo menor e mais rápido, com raio 20 e direção inicial aleatória. */
     public AlvoRapido(float x, float y, int larguraTela, int alturaTela) {
         super(x, y, 20f, 7.0f, larguraTela, alturaTela); // Chama construtor da classe Alvo
         this.vx = Math.random() < 0.5 ? -6.0f : 6.0f; // Direção horizontal aleatória

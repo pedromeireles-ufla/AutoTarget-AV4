@@ -14,14 +14,14 @@ public class Canhao extends Thread {
     private final Jogo jogo;
     private final boolean isEsquerda;
 
-    // Destino de realocação definido pela reconciliação de dados (sensor-driven)
-    // Destino calculado pela otimização; valores negativos indicam ausência de realocação pendente.
+    // Destino de realocação calculado pela otimização (sensor-driven via reconciliação de dados);
+    // valores negativos indicam ausência de realocação pendente.
     private volatile float destinoX = -1;
     private volatile float destinoY = -1;
     private volatile boolean emRealocacao = false;
 
-    // Velocidade de deslocamento gradual (px por tick de 100ms)
-    // Tamanho do passo por ciclo, evitando que o reposicionamento aconteça instantaneamente.
+    // Velocidade de deslocamento gradual: tamanho do passo (em pixels) por ciclo,
+    // evitando que o reposicionamento aconteça instantaneamente.
     private static final float PASSO_REALOCACAO = 4.0f;
 
     /** Inicializa o canhão em uma metade da tela e mantém referência ao jogo para disparar projéteis. */
@@ -48,9 +48,9 @@ public class Canhao extends Thread {
                 long intervaloBase = 1000;
                 int penalidadeExcesso = jogo.getPenalidade(isEsquerda);
 
-                // Penalidade por excesso de canhões:
-                // intervalo = intervaloBase * (1 + (n - L) * 0.2)
-                long intervaloFinal = (long) (intervaloBase * (1 + (penalidadeExcesso / 100.0)));
+                // Penalidade por excesso de canhões e Feedback de Temperatura (AV3)
+                // intervalo = intervaloBase * (1 + penalidade) * fatorFeedback
+                long intervaloFinal = (long) (intervaloBase * (1 + (penalidadeExcesso / 100.0)) * jogo.getFatorFeedback());
 
                 Thread.sleep(intervaloFinal);
             } catch (InterruptedException e) {
@@ -116,8 +116,4 @@ public class Canhao extends Thread {
     public float getY() { return y; }
     public float getAngulo() { return angulo; }
     public boolean isAtivo() { return ativo; }
-    public boolean isEsquerda() { return isEsquerda; }
-    public boolean isEmRealocacao() { return emRealocacao; }
-    public float getPosicaoOtimaX() { return destinoX; }
-    public float getPosicaoOtimaY() { return destinoY; }
 }

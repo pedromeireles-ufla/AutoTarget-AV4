@@ -32,34 +32,31 @@ public class OptimizationTask {
         this.cannonManager = new CannonManager(jogo, isEsquerda);
     }
 
-    /** Chamado quando um alvo entra no lado. Registra seu buffer sem bloquear. */
-    /** Começa a acompanhar um alvo criando um buffer de leituras para ele. */
+    /** Começa a acompanhar um alvo criando um buffer de leituras para ele, sem bloquear quem chama. */
     public void registrarAlvo(Alvo alvo) {
         buffersPorAlvo.putIfAbsent(alvo, new SensorBuffer());
     }
 
-    /** Chamado quando um alvo é destruído/removido. */
-    /** Deixa de acompanhar um alvo que saiu do lado ou foi removido. */
+    /** Deixa de acompanhar um alvo que saiu do lado ou foi removido/destruído. */
     public void removerAlvo(Alvo alvo) {
         buffersPorAlvo.remove(alvo);
     }
 
     /**
-     * Coleta leitura do sensor de um alvo.
-     * Chamado pelo próprio alvo a cada 1000ms — deve ser rápido e nunca bloquear.
+     * Armazena uma leitura ruidosa recebida do alvo para uso posterior na reconciliação.
+     * Chamado pelo próprio alvo a cada 1000ms — deve ser rápido e nunca bloquear;
      * ConcurrentHashMap.get() é lock-free para leituras.
      */
-    /** Armazena uma leitura ruidosa recebida do alvo para uso posterior na reconciliação. */
     public void coletarLeituraSensor(Alvo alvo, float x, float y, float vx, float vy) {
         SensorBuffer buffer = buffersPorAlvo.get(alvo);
         if (buffer != null) buffer.adicionarLeitura(x, y, vx, vy);
     }
 
     /**
-     * Ciclo completo de reconciliação e gestão de canhões.
-     * Chamado a cada 10 segundos — NUNCA bloqueia o movimento dos alvos.
+     * Consolida leituras recentes, aplica reconciliação por Mínimos Quadrados e aciona
+     * o gerenciador de canhões. Ciclo completo chamado a cada 10 segundos — nunca bloqueia
+     * o movimento dos alvos, pois trabalha sobre cópias (snapshots) do estado compartilhado.
      */
-    /** Consolida leituras recentes, aplica reconciliação e aciona o gerenciador de canhões. */
     public void executarReconciliacao() {
 
         // Fase 1: copia todos os alvos ativos para não impedir a lógica de criação de canhões.
@@ -335,13 +332,4 @@ public class OptimizationTask {
     private String ladoTexto() {
         return isEsquerda ? "Sistema A" : "Sistema B";
     }
-
-    /** Remove todos os buffers quando a partida é reiniciada ou encerrada. */
-    /** Remove todos os buffers quando o jogo é reiniciado ou finalizado. */
-    public void limpar() {
-        buffersPorAlvo.clear();
-    }
-
-    /** Expõe o gerenciador de canhões associado a este ciclo de otimização. */
-    public CannonManager getCannonManager() { return cannonManager; }
 }

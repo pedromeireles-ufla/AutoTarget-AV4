@@ -5,8 +5,7 @@ package com.autotarget.game.model;
  * Serve como tipo base de ameaça comum dentro da simulação.
  */
 public class AlvoComum extends Alvo {
-    // Construtor: Inicializa o alvo comum com raio 20 e velocidade moderada
-    /** Cria um alvo de velocidade moderada, usado como inimigo padrão da simulação. */
+    /** Cria um alvo de velocidade moderada, com raio 20 e direção inicial aleatória. */
     public AlvoComum(float x, float y, int larguraTela, int alturaTela) {
         super(x, y, 20f, 4.0f, larguraTela, alturaTela); // Chama construtor da classe Alvo
         this.vx = Math.random() < 0.5 ? -3.0f : 3.0f; // Direção horizontal aleatória
