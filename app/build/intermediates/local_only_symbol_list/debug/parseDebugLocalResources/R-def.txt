@@ -1,0 +1,27 @@
+R_DEF: Internal format may change without notice
+local
+color black
+color purple_500
+color purple_700
+color teal_200
+color white
+id btnAcaoPrincipal
+id btnReiniciarJogo
+id gameView
+id layoutPlacarFinal
+id mainLayout
+id pbEnergiaDir
+id pbEnergiaEsq
+id tvAbatesDir
+id tvAbatesEsq
+id tvAbatesFinalDir
+id tvAbatesFinalEsq
+id tvCronometro
+id tvEnergiaDir
+id tvEnergiaEsq
+id tvVencedor
+layout activity_main
+string app_name
+string btn_adicionar_canhao
+string btn_iniciar
+style Theme.AutoTarget

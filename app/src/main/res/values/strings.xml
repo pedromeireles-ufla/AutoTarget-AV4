@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AutoTarget AV1</string>
+    <string name="btn_iniciar">Iniciar Jogo</string>
+    <string name="btn_adicionar_canhao">Adicionar Canhão</string>
+</resources>

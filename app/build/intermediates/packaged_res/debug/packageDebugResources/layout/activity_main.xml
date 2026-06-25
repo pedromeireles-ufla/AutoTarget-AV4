@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- Cabeçalho superior com o nome do jogo. -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="AutoTarget"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:gravity="center"
+        android:paddingTop="12dp"
+        android:paddingBottom="4dp"
+        android:background="@android:color/white"/>
+
+    <!-- Legenda visual dos tipos de alvo exibidos no campo. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:background="@android:color/white">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            app:cardCornerRadius="6dp"
+            app:cardBackgroundColor="#FF0000"
+            app:cardElevation="0dp"
+            android:layout_marginEnd="4dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alvo Comum"
+            android:textSize="10sp"
+            android:layout_marginEnd="16dp"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            app:cardCornerRadius="6dp"
+            app:cardBackgroundColor="#0000FF"
+            app:cardElevation="0dp"
+            android:layout_marginEnd="4dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alvo Rápido"
+            android:textSize="10sp"/>
+    </LinearLayout>
+
+    <!-- Placar superior com energia e abates dos dois sistemas. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        android:baselineAligned="false">
+
+        <!-- Informações do Sistema A, posicionado à esquerda do campo. -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="start">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sistema A"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+            <TextView
+                android:id="@+id/tvEnergiaEsq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Energia: 100"
+                android:textSize="12sp"/>
+            <ProgressBar
+                android:id="@+id/pbEnergiaEsq"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:max="100"
+                android:progress="100"
+                android:progressTint="#2196F3" />
+            <TextView
+                android:id="@+id/tvAbatesEsq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Abates: 0"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- Separador visual entre os dados dos dois sistemas. -->
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="#DDDDDD"
+            android:layout_marginHorizontal="12dp"/>
+
+        <!-- Informações do Sistema B, posicionado à direita do campo. -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="start">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sistema B"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#333333"/>
+            <TextView
+                android:id="@+id/tvEnergiaDir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Energia: 100"
+                android:textSize="12sp"/>
+            <ProgressBar
+                android:id="@+id/pbEnergiaDir"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:max="100"
+                android:progress="100"
+                android:progressTint="#4CAF50" />
+            <TextView
+                android:id="@+id/tvAbatesDir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Abates: 0"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Área central onde o campo, os alvos, os canhões e os projéteis são desenhados. -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- Área central onde a simulação é desenhada pela classe GameView. -->
+    <com.autotarget.game.view.GameView
+            android:id="@+id/gameView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Painel exibido ao fim da partida com vencedor, abates e botão de reinício. -->
+        <LinearLayout
+            android:id="@+id/layoutPlacarFinal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="#E6000000"
+            android:padding="32dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tvVencedor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VENCEDOR: SISTEMA A"
+                android:textColor="#FFD700"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+                
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginEnd="32dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SISTEMA A"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"/>
+                    <TextView
+                        android:id="@+id/tvAbatesFinalEsq"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="12"
+                        android:textColor="#FFFFFF"
+                        android:textSize="32sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="VS"
+                    android:textColor="#88FFFFFF"
+                    android:textSize="18sp"
+                    android:layout_gravity="center"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginStart="32dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SISTEMA B"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"/>
+                    <TextView
+                        android:id="@+id/tvAbatesFinalDir"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10"
+                        android:textColor="#FFFFFF"
+                        android:textSize="32sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnReiniciarJogo"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Jogar Novamente"
+                android:backgroundTint="#4CAF50"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Rodapé com cronômetro da partida e botão principal de controle. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:background="@android:color/white"
+        android:elevation="8dp">
+
+        <TextView
+            android:id="@+id/tvCronometro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="60s"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#FF5722"
+            android:gravity="center"
+            android:layout_marginBottom="4dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <Button
+                android:id="@+id/btnAcaoPrincipal"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:text="Iniciar Jogo"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
