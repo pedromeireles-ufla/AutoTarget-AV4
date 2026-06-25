@@ -29,11 +29,11 @@ com.autotarget.game.app-cardview-1.0.0-27 C:\Users\palva\.gradle\caches\transfor
 com.autotarget.game.app-fragment-1.5.7-28 C:\Users\palva\.gradle\caches\transforms-4\eab8bdc3537e63528116aeffa5c80e04\transformed\fragment-1.5.7\res
 com.autotarget.game.app-jetified-startup-runtime-1.1.1-29 C:\Users\palva\.gradle\caches\transforms-4\ec40a22a76350d92d92c2eb5cf86c7e8\transformed\jetified-startup-runtime-1.1.1\res
 com.autotarget.game.app-lifecycle-runtime-2.6.1-30 C:\Users\palva\.gradle\caches\transforms-4\f76b7990a57ba9708373db545ac23f9c\transformed\lifecycle-runtime-2.6.1\res
-com.autotarget.game.app-pngs-31 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV3\app\build\generated\res\pngs\debug
-com.autotarget.game.app-res-32 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV3\app\build\generated\res\processDebugGoogleServices
-com.autotarget.game.app-resValues-33 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV3\app\build\generated\res\resValues\debug
-com.autotarget.game.app-packageDebugResources-34 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV3\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
-com.autotarget.game.app-packageDebugResources-35 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV3\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
-com.autotarget.game.app-debug-36 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV3\app\build\intermediates\merged_res\debug\mergeDebugResources
-com.autotarget.game.app-debug-37 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV3\app\src\debug\res
-com.autotarget.game.app-main-38 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV3\app\src\main\res
+com.autotarget.game.app-pngs-31 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\build\generated\res\pngs\debug
+com.autotarget.game.app-res-32 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\build\generated\res\processDebugGoogleServices
+com.autotarget.game.app-resValues-33 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\build\generated\res\resValues\debug
+com.autotarget.game.app-packageDebugResources-34 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.autotarget.game.app-packageDebugResources-35 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.autotarget.game.app-debug-36 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.autotarget.game.app-debug-37 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\debug\res
+com.autotarget.game.app-main-38 C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\res

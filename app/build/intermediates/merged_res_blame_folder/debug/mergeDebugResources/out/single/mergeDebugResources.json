@@ -1,34 +1,30 @@
 [
     {
-        "merged": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-debug-36:\\drawable_bg_posicao.xml.flat",
-        "source": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-main-38:\\drawable\\bg_posicao.xml"
+        "merged": "com.autotarget.game.app-debug-36:/layout_item_ranking.xml.flat",
+        "source": "com.autotarget.game.app-main-38:/layout/item_ranking.xml"
     },
     {
         "merged": "com.autotarget.game.app-debug-36:/layout_activity_login.xml.flat",
         "source": "com.autotarget.game.app-main-38:/layout/activity_login.xml"
     },
     {
-        "merged": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-debug-36:\\layout_activity_ranking.xml.flat",
-        "source": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-main-38:\\layout\\activity_ranking.xml"
+        "merged": "com.autotarget.game.app-debug-36:/drawable_bg_posicao.xml.flat",
+        "source": "com.autotarget.game.app-main-38:/drawable/bg_posicao.xml"
     },
     {
-        "merged": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-debug-36:\\layout_activity_login.xml.flat",
-        "source": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-main-38:\\layout\\activity_login.xml"
+        "merged": "com.autotarget.game.app-debug-36:/drawable_ic_arrow_back.xml.flat",
+        "source": "com.autotarget.game.app-main-38:/drawable/ic_arrow_back.xml"
     },
     {
-        "merged": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-debug-36:\\drawable_ic_arrow_back.xml.flat",
-        "source": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-main-38:\\drawable\\ic_arrow_back.xml"
+        "merged": "com.autotarget.game.app-debug-36:/layout_activity_main.xml.flat",
+        "source": "com.autotarget.game.app-main-38:/layout/activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-debug-36:\\drawable_bg_avatar.xml.flat",
-        "source": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-main-38:\\drawable\\bg_avatar.xml"
+        "merged": "com.autotarget.game.app-debug-36:/drawable_bg_avatar.xml.flat",
+        "source": "com.autotarget.game.app-main-38:/drawable/bg_avatar.xml"
     },
     {
-        "merged": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-debug-36:\\layout_activity_main.xml.flat",
-        "source": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-main-38:\\layout\\activity_main.xml"
-    },
-    {
-        "merged": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-debug-36:\\layout_item_ranking.xml.flat",
-        "source": "C:\\Users\\palva\\.gradle\\daemon\\8.7\\com.autotarget.game.app-main-38:\\layout\\item_ranking.xml"
+        "merged": "com.autotarget.game.app-debug-36:/layout_activity_ranking.xml.flat",
+        "source": "com.autotarget.game.app-main-38:/layout/activity_ranking.xml"
     }
 ]
