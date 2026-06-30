@@ -725,128 +725,227 @@ public final class SchedulingAnalysis {
         return (1 << coresUsados) - 1;
     }
 
-    /** Gera o gráfico SVG comparando tempo teórico, média experimental e pico medido. */
+    /**
+     * Gera o gráfico SVG comparando tempo de resposta máximo experimental
+     * com o deadline teórico de cada tarefa, por configuração de núcleos.
+     * Cada tarefa recebe um grupo de 3 barras (1, 2 e todos os núcleos).
+     * A linha vermelha horizontal indica o deadline Di de cada tarefa.
+     */
     private static void escreverSvg(File arquivo, List<RealtimeTask> tarefas,
                                     List<BenchmarkMeasurement> medicoes) {
-        int width = 1280;
-        int height = 760;
-        int left = 100;
-        int right = 50;
-        int top = 80;
-        int chartHeight = 500;
-        int bottom = top + chartHeight;
-        int barWidth = 22;
-        int gap = 12;
-        int groupGap = 34;
+        final int WIDTH     = 1280;
+        final int HEIGHT    = 800;
+        final int PAD_LEFT  = 100;
+        final int PAD_RIGHT = 40;
+        final int PAD_TOP   = 90;
+        final int CHART_H   = HEIGHT - PAD_TOP - 150;
+        final int CHART_BOT = PAD_TOP + CHART_H;
+        final int CHART_W   = WIDTH - PAD_LEFT - PAD_RIGHT;
 
-        double maiorMedicao = 1.0;
-        for (BenchmarkMeasurement m : medicoes) {
-            if (m.maxResponseMs > 0) {
-                maiorMedicao = Math.max(maiorMedicao, m.maxResponseMs);
-            }
+        // Agrupa medições por tarefa para desenhar grupos de barras
+        Map<String, List<BenchmarkMeasurement>> porTarefa = new LinkedHashMap<>();
+        Map<String, Integer> deadlines = new HashMap<>();
+        for (RealtimeTask t : tarefas) {
+            porTarefa.put(t.code, new ArrayList<>());
+            deadlines.put(t.code, t.deadlineMs);
         }
-        double maxEscala = Math.ceil((maiorMedicao * 1.15) / 5.0) * 5.0;
-        if (maxEscala < 5.0) maxEscala = 5.0;
+        for (BenchmarkMeasurement m : medicoes) {
+            List<BenchmarkMeasurement> lista = porTarefa.get(m.taskCode);
+            if (lista != null) lista.add(m);
+        }
+
+        // Escala Y: máximo entre pico experimental e deadline, +15% margem
+        double maxValor = 1.0;
+        for (BenchmarkMeasurement m : medicoes)
+            if (m.maxResponseMs > 0) maxValor = Math.max(maxValor, m.maxResponseMs);
+        for (RealtimeTask t : tarefas)
+            maxValor = Math.max(maxValor, t.deadlineMs);
+        final double maxEscala = Math.ceil(maxValor * 1.15 / 5.0) * 5.0;
+
+        final int N_TAREFAS   = tarefas.size();
+        final int BAR_W       = 18;
+        final int BAR_GAP     = 5;
+        final int GROUP_W     = 3 * BAR_W + 2 * BAR_GAP;
+        final int GROUP_GAP   = 24;
+        final int TOTAL_W     = N_TAREFAS * (GROUP_W + GROUP_GAP);
+        final int GROUPS_START = PAD_LEFT + Math.max(0, (CHART_W - TOTAL_W) / 2) + 10;
+
+        Map<String, Integer> groupIndex = new LinkedHashMap<>();
+        int idx = 0;
+        for (RealtimeTask t : tarefas) groupIndex.put(t.code, idx++);
+
+        final String[] CONFIG_CORES = {"#1565C0", "#2E7D32", "#6A1B9A"};
+        final String[] CONFIG_NOMES = {"1 n\u00FAcleo", "2 n\u00FAcleos", "todos os n\u00FAcleos"};
 
         StringBuilder sb = new StringBuilder();
-        sb.append("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"").append(width)
-                .append("\" height=\"").append(height).append("\">\n");
-        sb.append("<rect width=\"100%\" height=\"100%\" fill=\"#FFFFFF\"/>\n");
-        sb.append("<text x=\"40\" y=\"38\" font-size=\"24\" font-family=\"sans-serif\" font-weight=\"bold\" fill=\"#1B1B1B\">Comparativo de tempos de resposta por afinidade de processador</text>\n");
-        sb.append("<text x=\"40\" y=\"62\" font-size=\"13\" font-family=\"sans-serif\" fill=\"#555555\">Escala do eixo Y em milissegundos, baseada nas respostas máximas medidas no benchmark.</text>\n");
 
-        int chartRight = width - right;
-        for (int i = 0; i <= 5; i++) {
-            double valor = (maxEscala / 5.0) * i;
-            int y = bottom - (int) Math.round((valor / maxEscala) * chartHeight);
-            sb.append("<line x1=\"").append(left).append("\" y1=\"").append(y)
-                    .append("\" x2=\"").append(chartRight).append("\" y2=\"").append(y)
-                    .append("\" stroke=\"#E0E0E0\" stroke-width=\"1\"/>\n");
-            sb.append("<text x=\"").append(left - 12).append("\" y=\"").append(y + 4)
-                    .append("\" font-size=\"11\" font-family=\"sans-serif\" fill=\"#444444\" text-anchor=\"end\">")
-                    .append(String.format(Locale.US, "%.0f ms", valor)).append("</text>\n");
+        // Abertura do SVG
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+        sb.append("<svg xmlns=\"http://www.w3.org/2000/svg\"");
+        sb.append(" width=\"").append(WIDTH).append("\"");
+        sb.append(" height=\"").append(HEIGHT).append("\"");
+        sb.append(" viewBox=\"0 0 ").append(WIDTH).append(" ").append(HEIGHT).append("\">\n");
+
+        // Fundo com gradiente
+        sb.append("<defs>\n");
+        sb.append("  <linearGradient id=\"bgGrad\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\n");
+        sb.append("    <stop offset=\"0%\" stop-color=\"#F8F9FF\"/>\n");
+        sb.append("    <stop offset=\"100%\" stop-color=\"#FAFAFA\"/>\n");
+        sb.append("  </linearGradient>\n");
+        sb.append("</defs>\n");
+        sb.append("<rect width=\"100%\" height=\"100%\" fill=\"url(#bgGrad)\"/>\n");
+
+        // Painel branco interno
+        sb.append("<rect");
+        sb.append(" x=\"").append(PAD_LEFT - 10).append("\"");
+        sb.append(" y=\"").append(PAD_TOP - 10).append("\"");
+        sb.append(" width=\"").append(CHART_W + 20).append("\"");
+        sb.append(" height=\"").append(CHART_H + 20).append("\"");
+        sb.append(" fill=\"white\" stroke=\"#E0E0E0\" stroke-width=\"1\" rx=\"6\"/>\n");
+
+        // Títulos
+        sb.append("<text x=\"").append(WIDTH / 2).append("\" y=\"32\"");
+        sb.append(" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"17\"");
+        sb.append(" font-weight=\"bold\" fill=\"#1A237E\">");
+        sb.append("Tempos de Resposta por Configura\u00E7\u00E3o de N\u00FAcleos</text>\n");
+
+        sb.append("<text x=\"").append(WIDTH / 2).append("\" y=\"54\"");
+        sb.append(" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"12\" fill=\"#546E7A\">");
+        sb.append("Barras: tempo de resposta m\u00E1ximo experimental (ms)");
+        sb.append(" | Linha pontilhada: deadline Di da tarefa</text>\n");
+
+        sb.append("<text x=\"").append(WIDTH / 2).append("\" y=\"71\"");
+        sb.append(" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"11\" fill=\"#78909C\">");
+        sb.append("Contorno vermelho indica pico experimental acima do deadline Di</text>\n");
+
+        // Grade horizontal (8 linhas)
+        final int GRID_N = 8;
+        for (int gi = 0; gi <= GRID_N; gi++) {
+            double val = maxEscala / GRID_N * gi;
+            int gy = CHART_BOT - (int) Math.round(val / maxEscala * CHART_H);
+            String dash = (gi == 0) ? "none" : "4,3";
+            String corG = (gi == 0) ? "#BDBDBD" : "#EEEEEE";
+            sb.append("<line x1=\"").append(PAD_LEFT).append("\" y1=\"").append(gy).append("\"");
+            sb.append(" x2=\"").append(WIDTH - PAD_RIGHT).append("\" y2=\"").append(gy).append("\"");
+            sb.append(" stroke=\"").append(corG).append("\" stroke-dasharray=\"").append(dash).append("\"/>\n");
+            sb.append("<text x=\"").append(PAD_LEFT - 8).append("\" y=\"").append(gy + 4).append("\"");
+            sb.append(" font-size=\"11\" font-family=\"sans-serif\" fill=\"#607D8B\" text-anchor=\"end\">");
+            sb.append(String.format(Locale.US, "%.0f ms", val)).append("</text>\n");
         }
 
-        sb.append("<line x1=\"").append(left).append("\" y1=\"").append(bottom)
-                .append("\" x2=\"").append(chartRight).append("\" y2=\"").append(bottom)
-                .append("\" stroke=\"#222222\" stroke-width=\"1.5\"/>\n");
-        sb.append("<line x1=\"").append(left).append("\" y1=\"").append(top)
-                .append("\" x2=\"").append(left).append("\" y2=\"").append(bottom)
-                .append("\" stroke=\"#222222\" stroke-width=\"1.5\"/>\n");
-        sb.append("<text x=\"25\" y=\"").append(top + chartHeight / 2)
-                .append("\" font-size=\"13\" font-family=\"sans-serif\" fill=\"#333333\" transform=\"rotate(-90 25,")
-                .append(top + chartHeight / 2).append(")\">Resposta máxima medida (ms)</text>\n");
+        // Eixos
+        sb.append("<line x1=\"").append(PAD_LEFT).append("\" y1=\"").append(CHART_BOT).append("\"");
+        sb.append(" x2=\"").append(WIDTH - PAD_RIGHT).append("\" y2=\"").append(CHART_BOT).append("\"");
+        sb.append(" stroke=\"#37474F\" stroke-width=\"2\"/>\n");
+        sb.append("<line x1=\"").append(PAD_LEFT).append("\" y1=\"").append(PAD_TOP - 10).append("\"");
+        sb.append(" x2=\"").append(PAD_LEFT).append("\" y2=\"").append(CHART_BOT).append("\"");
+        sb.append(" stroke=\"#37474F\" stroke-width=\"2\"/>\n");
 
-        int x = left + 24;
-        String lastConfig = null;
-        int groupStartX = x;
+        // Label eixo Y (rotacionado)
+        int midY = PAD_TOP + CHART_H / 2;
+        sb.append("<text x=\"22\" y=\"").append(midY).append("\"");
+        sb.append(" font-size=\"13\" font-family=\"sans-serif\" fill=\"#37474F\"");
+        sb.append(" transform=\"rotate(-90 22,").append(midY).append(")\">");
+        sb.append("Tempo de Resposta M\u00E1ximo (ms)</text>\n");
 
-        for (BenchmarkMeasurement m : medicoes) {
-            if (lastConfig != null && !m.config.equals(lastConfig)) {
-                int groupEndX = x - gap;
-                int labelX = (groupStartX + groupEndX) / 2;
-                sb.append("<line x1=\"").append(x - groupGap / 2).append("\" y1=\"").append(top - 10)
-                        .append("\" x2=\"").append(x - groupGap / 2).append("\" y2=\"").append(bottom + 58)
-                        .append("\" stroke=\"#BDBDBD\" stroke-width=\"1\" stroke-dasharray=\"5,5\"/>\n");
-                sb.append("<text x=\"").append(labelX).append("\" y=\"").append(bottom + 92)
-                        .append("\" font-size=\"15\" font-family=\"sans-serif\" font-weight=\"bold\" text-anchor=\"middle\" fill=\"#222222\">")
-                        .append(lastConfig).append("</text>\n");
-                x += groupGap;
-                groupStartX = x;
+        // Grupos de barras por tarefa
+        for (RealtimeTask tarefa : tarefas) {
+            int gi  = groupIndex.get(tarefa.code);
+            int gx0 = GROUPS_START + gi * (GROUP_W + GROUP_GAP);
+
+            List<BenchmarkMeasurement> lista = porTarefa.get(tarefa.code);
+            Collections.sort(lista, Comparator.comparingInt(m -> m.coresRepresented));
+
+            // Linha de deadline desta tarefa
+            int dMs = deadlines.getOrDefault(tarefa.code, 0);
+            if (dMs > 0 && (double) dMs <= maxEscala) {
+                int dy = CHART_BOT - (int) Math.round((double) dMs / maxEscala * CHART_H);
+                sb.append("<line x1=\"").append(gx0 - 4).append("\" y1=\"").append(dy).append("\"");
+                sb.append(" x2=\"").append(gx0 + GROUP_W + 4).append("\" y2=\"").append(dy).append("\"");
+                sb.append(" stroke=\"#E53935\" stroke-width=\"1.5\" stroke-dasharray=\"5,3\" opacity=\"0.8\"/>\n");
             }
 
-            if (lastConfig == null || !m.config.equals(lastConfig)) {
-                lastConfig = m.config;
+            // 3 barras: 1 núcleo, 2 núcleos, todos
+            for (int bi = 0; bi < Math.min(3, lista.size()); bi++) {
+                BenchmarkMeasurement m = lista.get(bi);
+                int bx = gx0 + bi * (BAR_W + BAR_GAP);
+                double valorBarra = Math.max(0.0, m.maxResponseMs);
+                int bh = (int) Math.round(valorBarra / maxEscala * CHART_H);
+                if (valorBarra > 0 && bh < 3) bh = 3;
+                int by = CHART_BOT - bh;
+                String fillCor = m.maxResponseMs < 0 ? "#9E9E9E" : CONFIG_CORES[bi % 3];
+                boolean peakOver = m.maxResponseMs >= 0 && !m.experimentalPeakDeadlineMet;
+
+                sb.append("<rect x=\"").append(bx).append("\" y=\"").append(by).append("\"");
+                sb.append(" width=\"").append(BAR_W).append("\" height=\"").append(bh).append("\"");
+                sb.append(" fill=\"").append(fillCor).append("\" rx=\"3\"/>\n");
+
+                if (peakOver) {
+                    sb.append("<rect x=\"").append(bx).append("\" y=\"").append(by).append("\"");
+                    sb.append(" width=\"").append(BAR_W).append("\" height=\"").append(bh).append("\"");
+                    sb.append(" fill=\"none\" stroke=\"#C62828\" stroke-width=\"2\" rx=\"3\"/>\n");
+                }
+
+                if (m.maxResponseMs >= 0) {
+                    int tyVal = Math.max(PAD_TOP + 12, by - 3);
+                    sb.append("<text x=\"").append(bx + BAR_W / 2).append("\" y=\"").append(tyVal).append("\"");
+                    sb.append(" font-size=\"9\" font-family=\"sans-serif\" fill=\"#222\"");
+                    sb.append(" text-anchor=\"middle\">");
+                    sb.append(String.format(Locale.US, "%.1f", m.maxResponseMs)).append("</text>\n");
+                }
             }
 
-            double valorBarra = Math.max(0.0, m.maxResponseMs);
-            int h = (int) Math.round((valorBarra / maxEscala) * chartHeight);
-            if (valorBarra > 0 && h < 3) h = 3;
-            int y = bottom - h;
-            String color = m.maxResponseMs < 0 ? "#9E9E9E" : corConfiguracao(m.config);
-            String stroke = (m.maxResponseMs >= 0 && !m.experimentalPeakDeadlineMet) ? "#C62828" : "none";
-            int strokeWidth = (m.maxResponseMs >= 0 && !m.experimentalPeakDeadlineMet) ? 3 : 0;
+            // Labels eixo X: código e nome curto
+            int labelX = gx0 + GROUP_W / 2;
+            sb.append("<text x=\"").append(labelX).append("\" y=\"").append(CHART_BOT + 18).append("\"");
+            sb.append(" font-size=\"12\" font-weight=\"bold\" font-family=\"sans-serif\"");
+            sb.append(" text-anchor=\"middle\" fill=\"#37474F\">");
+            sb.append(escXml(tarefa.code)).append("</text>\n");
 
-            sb.append("<rect x=\"").append(x).append("\" y=\"").append(y)
-                    .append("\" width=\"").append(barWidth).append("\" height=\"").append(h)
-                    .append("\" fill=\"").append(color).append("\" stroke=\"").append(stroke)
-                    .append("\" stroke-width=\"").append(strokeWidth).append("\" rx=\"3\"/>\n");
-
-            sb.append("<text x=\"").append(x + barWidth / 2).append("\" y=\"").append(Math.max(top + 12, y - 6))
-                    .append("\" font-size=\"10\" font-family=\"sans-serif\" fill=\"#222222\" text-anchor=\"middle\">")
-                    .append(m.maxResponseMs < 0 ? "erro" : String.format(Locale.US, "%.1f", m.maxResponseMs))
-                    .append("</text>\n");
-
-            sb.append("<text x=\"").append(x + barWidth / 2).append("\" y=\"").append(bottom + 18)
-                    .append("\" font-size=\"10\" font-family=\"sans-serif\" text-anchor=\"middle\" fill=\"#333333\">")
-                    .append(m.taskCode).append("</text>\n");
-
-            x += barWidth + gap;
+            String nome = tarefa.name.length() > 16 ? tarefa.name.substring(0, 14) + "\u2026" : tarefa.name;
+            sb.append("<text x=\"").append(labelX).append("\" y=\"").append(CHART_BOT + 30).append("\"");
+            sb.append(" font-size=\"9\" font-family=\"sans-serif\" fill=\"#607D8B\" text-anchor=\"middle\">");
+            sb.append(escXml(nome)).append("</text>\n");
         }
 
-        if (lastConfig != null) {
-            int groupEndX = x - gap;
-            int labelX = (groupStartX + groupEndX) / 2;
-            sb.append("<text x=\"").append(labelX).append("\" y=\"").append(bottom + 92)
-                    .append("\" font-size=\"15\" font-family=\"sans-serif\" font-weight=\"bold\" text-anchor=\"middle\" fill=\"#222222\">")
-                    .append(lastConfig).append("</text>\n");
+        // Legenda
+        int legY = CHART_BOT + 55;
+
+        for (int li = 0; li < CONFIG_NOMES.length; li++) {
+            int lx = PAD_LEFT + li * 220;
+            sb.append("<rect x=\"").append(lx).append("\" y=\"").append(legY).append("\"");
+            sb.append(" width=\"14\" height=\"14\" fill=\"").append(CONFIG_CORES[li]).append("\" rx=\"2\"/>\n");
+            sb.append("<text x=\"").append(lx + 20).append("\" y=\"").append(legY + 11).append("\"");
+            sb.append(" font-size=\"12\" font-family=\"sans-serif\" fill=\"#37474F\">");
+            sb.append(CONFIG_NOMES[li]).append("</text>\n");
         }
 
-        sb.append("<rect x=\"40\" y=\"700\" width=\"14\" height=\"14\" fill=\"#1565C0\" rx=\"2\"/>\n");
-        sb.append("<text x=\"62\" y=\"712\" font-size=\"13\" font-family=\"sans-serif\" fill=\"#333333\">1 núcleo</text>\n");
-        sb.append("<rect x=\"150\" y=\"700\" width=\"14\" height=\"14\" fill=\"#2E7D32\" rx=\"2\"/>\n");
-        sb.append("<text x=\"172\" y=\"712\" font-size=\"13\" font-family=\"sans-serif\" fill=\"#333333\">2 núcleos</text>\n");
-        sb.append("<rect x=\"270\" y=\"700\" width=\"14\" height=\"14\" fill=\"#6A1B9A\" rx=\"2\"/>\n");
-        sb.append("<text x=\"292\" y=\"712\" font-size=\"13\" font-family=\"sans-serif\" fill=\"#333333\">todos os núcleos</text>\n");
-        sb.append("<rect x=\"450\" y=\"700\" width=\"14\" height=\"14\" fill=\"#9E9E9E\" rx=\"2\"/>\n");
-        sb.append("<text x=\"472\" y=\"712\" font-size=\"13\" font-family=\"sans-serif\" fill=\"#333333\">Erro/medição indisponível</text>\n");
-        sb.append("<rect x=\"680\" y=\"700\" width=\"14\" height=\"14\" fill=\"#FFFFFF\" stroke=\"#C62828\" stroke-width=\"3\" rx=\"2\"/>\n");
-        sb.append("<text x=\"702\" y=\"712\" font-size=\"13\" font-family=\"sans-serif\" fill=\"#333333\">Pico experimental acima de Di</text>\n");
-        sb.append("<text x=\"40\" y=\"735\" font-size=\"12\" font-family=\"sans-serif\" fill=\"#555555\">As cores identificam a configuração medida. O contorno vermelho indica somente pico experimental acima do deadline Di; a Tabela 2 separa RM, média experimental e pico.</text>\n");
+        int legX2 = PAD_LEFT + 680;
+        sb.append("<line x1=\"").append(legX2).append("\" y1=\"").append(legY + 7).append("\"");
+        sb.append(" x2=\"").append(legX2 + 26).append("\" y2=\"").append(legY + 7).append("\"");
+        sb.append(" stroke=\"#E53935\" stroke-width=\"1.5\" stroke-dasharray=\"5,3\" opacity=\"0.8\"/>\n");
+        sb.append("<text x=\"").append(legX2 + 32).append("\" y=\"").append(legY + 11).append("\"");
+        sb.append(" font-size=\"12\" font-family=\"sans-serif\" fill=\"#37474F\">");
+        sb.append("Deadline Di da tarefa</text>\n");
+
+        int legX3 = PAD_LEFT + 900;
+        sb.append("<rect x=\"").append(legX3).append("\" y=\"").append(legY).append("\"");
+        sb.append(" width=\"14\" height=\"14\" fill=\"none\" stroke=\"#C62828\" stroke-width=\"2\" rx=\"2\"/>\n");
+        sb.append("<text x=\"").append(legX3 + 20).append("\" y=\"").append(legY + 11).append("\"");
+        sb.append(" font-size=\"12\" font-family=\"sans-serif\" fill=\"#37474F\">");
+        sb.append("Pico acima do Di</text>\n");
+
+        // Nota de rodapé
+        sb.append("<text x=\"").append(WIDTH / 2).append("\" y=\"").append(CHART_BOT + 90).append("\"");
+        sb.append(" font-size=\"10\" font-family=\"sans-serif\" fill=\"#9E9E9E\" text-anchor=\"middle\">");
+        sb.append("Barras cinzas indicam erro ou medi\u00E7\u00E3o indispon\u00EDvel.");
+        sb.append(" Cores identificam a configura\u00E7\u00E3o de n\u00FAcleos conforme legenda.</text>\n");
+
         sb.append("</svg>\n");
         escreverTexto(arquivo, sb.toString());
     }
 
+    /** Escolhe uma cor fixa para cada configuração no gráfico SVG. */
     /** Escolhe uma cor fixa para cada configuração no gráfico SVG. */
     private static String corConfiguracao(String config) {
         if ("1 núcleo".equals(config)) return "#1565C0";

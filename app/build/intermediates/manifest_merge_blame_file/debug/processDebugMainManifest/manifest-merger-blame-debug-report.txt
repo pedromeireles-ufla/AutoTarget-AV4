@@ -10,8 +10,8 @@
 10        android:targetSdkVersion="34" />
 11
 12    <uses-permission android:name="android.permission.INTERNET" />
-12-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:5:5-67
-12-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:5:22-64
+12-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:5:5-67
+12-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:5:22-64
 13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 13-->[com.google.firebase:firebase-auth:22.3.0] C:\Users\palva\.gradle\caches\transforms-4\083420eb9e58f6b356374ddd2c094bbe\transformed\jetified-firebase-auth-22.3.0\AndroidManifest.xml:26:5-79
 13-->[com.google.firebase:firebase-auth:22.3.0] C:\Users\palva\.gradle\caches\transforms-4\083420eb9e58f6b356374ddd2c094bbe\transformed\jetified-firebase-auth-22.3.0\AndroidManifest.xml:26:22-76
@@ -28,61 +28,61 @@
 19-->[androidx.core:core:1.9.0] C:\Users\palva\.gradle\caches\transforms-4\d1e8670cb045856b1839f5c749bd1c98\transformed\core-1.9.0\AndroidManifest.xml:26:22-94
 20
 21    <application
-21-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:7:5-36:19
+21-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:7:5-36:19
 22        android:allowBackup="true"
-22-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:8:9-35
+22-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:8:9-35
 23        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 23-->[androidx.core:core:1.9.0] C:\Users\palva\.gradle\caches\transforms-4\d1e8670cb045856b1839f5c749bd1c98\transformed\core-1.9.0\AndroidManifest.xml:28:18-86
 24        android:debuggable="true"
 25        android:extractNativeLibs="false"
 26        android:label="@string/app_name"
-26-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:9:9-41
+26-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:9:9-41
 27        android:supportsRtl="true"
-27-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:10:9-35
+27-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:10:9-35
 28        android:testOnly="true"
 29        android:theme="@style/Theme.AutoTarget" >
-29-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:11:9-48
+29-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:11:9-48
 30
 31        <!-- Activity Principal do Jogo -->
 32        <!-- android:screenOrientation="portrait" fixa a tela na vertical -->
 33        <!-- android:configChanges evita que a Activity reinicie ao girar a tela -->
 34        <activity
-34-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:16:9-24:20
+34-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:16:9-24:20
 35            android:name="com.autotarget.game.view.LoginActivity"
-35-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:17:13-47
+35-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:17:13-47
 36            android:exported="true"
-36-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:18:13-36
+36-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:18:13-36
 37            android:screenOrientation="portrait" >
-37-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:19:13-49
+37-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:19:13-49
 38            <intent-filter>
-38-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:20:13-23:29
+38-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:20:13-23:29
 39                <action android:name="android.intent.action.MAIN" />
-39-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:21:17-69
-39-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:21:25-66
+39-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:21:17-69
+39-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:21:25-66
 40
 41                <category android:name="android.intent.category.LAUNCHER" />
-41-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:22:17-77
-41-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:22:27-74
+41-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:22:17-77
+41-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:22:27-74
 42            </intent-filter>
 43        </activity>
 44        <activity
-44-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:26:9-30:77
+44-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:26:9-30:77
 45            android:name="com.autotarget.game.view.MainActivity"
-45-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:27:13-46
+45-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:27:13-46
 46            android:configChanges="orientation|screenSize|keyboardHidden"
-46-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:30:13-74
+46-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:30:13-74
 47            android:exported="false"
-47-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:28:13-37
+47-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:28:13-37
 48            android:screenOrientation="portrait" />
-48-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:29:13-49
+48-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:29:13-49
 49        <activity
-49-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:32:9-35:52
+49-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:32:9-35:52
 50            android:name="com.autotarget.game.view.RankingActivity"
-50-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:33:13-49
+50-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:33:13-49
 51            android:exported="false"
-51-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:34:13-37
+51-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:34:13-37
 52            android:screenOrientation="portrait" />
-52-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4\app\src\main\AndroidManifest.xml:35:13-49
+52-->C:\Users\palva\OneDrive\Desktop\Automacao Avancada\Atual\AutoTarget_AV4_v03\app\src\main\AndroidManifest.xml:35:13-49
 53        <activity
 53-->[com.google.firebase:firebase-auth:22.3.0] C:\Users\palva\.gradle\caches\transforms-4\083420eb9e58f6b356374ddd2c094bbe\transformed\jetified-firebase-auth-22.3.0\AndroidManifest.xml:29:9-46:20
 54            android:name="com.google.firebase.auth.internal.GenericIdpActivity"
